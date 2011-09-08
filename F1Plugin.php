@@ -28,7 +28,7 @@ class F1Plugin extends Plugin
     {
         return true;
     }
-                    
+
     /**
      * Provide plugin version information.
      *
@@ -76,7 +76,7 @@ class F1Plugin extends Plugin
             return true;
         }
     }
-    
+
     function onStartShowHeadElements($page) {
       $page->element('link', array('rel'=>'application-manifest',
                                    'href'=>common_path('main/manifest.webapp')));
@@ -89,21 +89,21 @@ class OpenwebappmanifestAction extends Action
 {
     var $user = null;
     var $gc = null;
-    
+
     function handle($args)
     {
         header('Content-Type: application/x-web-app-manifest+json');
         include_once(dirname(__file__) . '/manifest.webapp.php');
         return false;
     }
-    
+
 }
 
 class FirefoxshareAction extends Action
 {
     var $user = null;
     var $gc = null;
-    
+
     function handle($args)
     {
         include_once(dirname(__FILE__) . '/firefoxshare.php');
