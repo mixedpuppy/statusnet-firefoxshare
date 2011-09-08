@@ -34,15 +34,10 @@ var baseurl = document.location.protocol+"//"+document.location.host;
 var name = "<?php echo common_config('site', 'name') ?>";
 var displayName = "<?php echo common_config('site', 'name') ?>";
 
-var characteristics = {
+var parameters = {
     type: name, // XXX - should be able to nuke this.
 
     features: {
-      //TODO: remove direct when old UI is no longer in use,
-      //or remove it from use.
-      direct: true,
-      subject: false,
-      counter: true
     },
     shareTypes: [{
       type: 'public',
@@ -52,8 +47,11 @@ var characteristics = {
       name: 'Direct Message',
       toLabel: 'type in name of recipient'
     }],
-    textLimit: 140,
-    shorten: true,
+    constraints: {
+      textLimit: 140,
+      editableURLInMessage: true,
+      shortURLLength: 20
+    },
     auth: {
       type: "oauth",
       name: name,
@@ -293,11 +291,6 @@ navigator.apps.services.registerHandler('link.send', 'confirm', function(activit
   api.send(activity, credentials);
 });
 
-navigator.apps.services.registerHandler('link.send', 'getCharacteristics', function(activity, credentials) {
-  // some if these need re-thinking.
-  activity.postResult(characteristics);
-});
-
 navigator.apps.services.registerHandler('link.send', 'getLogin', function(activity, credentials) {
   getLogin(domain, activity, credentials);
 });
@@ -381,23 +374,8 @@ navigator.apps.services.registerHandler('link.send', 'resolveRecipients', functi
 
 
 navigator.apps.services.registerHandler('link.send', 'getParameters', function(activity, credentials) {
-  activity.postResult({
-      type: "oauth",
-      name: name,
-      displayName: displayName,
-      calls: {
-                signatureMethod     : "HMAC-SHA1",
-                requestTokenURL     : baseurl+"/api/oauth/request_token",
-                userAuthorizationURL: baseurl+"/api/oauth/authorize",
-                accessTokenURL      : baseurl+"/api/oauth/access_token"
-              },
-      key: "4afde55ef9a345fe08d82e1481979655",
-      secret: "0ab39288458651a761c916477972ff36",
-      params: null,
-      completionURI: "http://oauthcallback.local/access.xhtml",
-      version: "1.0",
-      tokenRx: "oauth_verifier=([^&]*)"
-    });
+  // This is currently slightly confused - it is both link.send parameters and auth parameters.
+  activity.postResult(parameters);
 });
 
 navigator.apps.services.registerHandler('link.send', 'getCredentials', function(activity, credentials) {
